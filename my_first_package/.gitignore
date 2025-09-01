@@ -1,0 +1,68 @@
+# .gitignore for a Sui / Move project
+# Purpose: ignore build artifacts, temporary files, local keys, editor settings and other noise
+
+### Build artifacts
+/build/
+/debug_info/
+/target/
+
+### Move/Sui artifacts (build outputs, bytecode, debug info)
+# Keep sources/ and Move.toml/Move.lock in repo, but ignore generated build outputs
+/build/**
+*.mvd
+*.mv
+*.json
+
+### Sui client / local keys
+.sui/
+
+### Rust
+# Ignore cargo build dir
+/target/
+
+### Node
+node_modules/
+
+### Editor directories and files
+.vscode/
+.idea/
+*.sublime-* 
+
+### OS generated files
+.DS_Store
+Thumbs.db
+
+### Temporary files
+*.tmp
+*.temp
+*.swp
+*~
+
+### Logs
+*.log
+
+### Python
+__pycache__/
+*.py[cod]
+
+### Environment files
+.env
+.env.*
+
+### Test / coverage
+.coverage
+coverage/
+pytest_cache/
+
+### Archive / packages
+*.tar
+*.zip
+*.gz
+
+### Misc - local IDE or tooling artifacts
+.DS_Store
+.cache/
+.history/
+build/*
+.trace
+.coverage*
