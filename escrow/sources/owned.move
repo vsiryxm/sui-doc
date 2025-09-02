@@ -1,4 +1,3 @@
-/// https://github.com/MystenLabs/sui/blob/main/examples/trading/contracts/escrow/sources/owned.move
 /// 
 /// 使用单个所有者交易进行对象原子交换的托管（escrow）示例，
 /// 信任第三方以保证活性（liveness），但不信任第三方保证安全性（safety）
