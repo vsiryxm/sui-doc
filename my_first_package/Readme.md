@@ -769,10 +769,12 @@ Test result: OK. Total tests: 3; passed: 3; failed: 0
 ```
 从上述信息可以了解到，`forge` 对象的 `swords_created` 字段值发生了变化。从堆栈跟踪信息中可以看到已执行的字节码指令。
 
+---
 
-## 参考资料
+**参考资料**
 
-https://move-book.com/
+https://github.com/MystenLabs/sui/tree/main/examples/move/first_package
 
 https://docs.sui.io/guides/developer/first-app
 
+https://move-book.com/
