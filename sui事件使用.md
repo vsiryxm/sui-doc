@@ -452,8 +452,7 @@ const runEventJob = async (client: SuiClient, tracker: EventTracker, cursor: Sui
 };
 
 /**
- * Gets the latest cursor for an event tracker, either from the DB (if it's undefined)
- *  or from the running cursors.
+ * 获取事件跟踪器的最新游标，可以从数据库（如果未定义）或正在运行的游标中获取
  */
 const getLatestCursor = async (tracker: EventTracker) => {
   const cursor = await prisma.cursor.findUnique({
@@ -466,8 +465,7 @@ const getLatestCursor = async (tracker: EventTracker) => {
 };
 
 /**
- * Saves the latest cursor for an event tracker to the db, so we can resume
- * from there.
+ * 将事件跟踪器的最新cursor保存到数据库，以便我们可以从那里恢复 
  * */
 const saveLatestCursor = async (tracker: EventTracker, cursor: EventId) => {
   const data = {
@@ -494,6 +492,7 @@ export const setupListeners = async () => {
 Trustless Swap 集成了处理程序来处理触发的每种事件类型。对于 `locked` 事件，`locked-handler.ts` 中的处理程序会触发并相应地更新 Prisma 数据库。
 
 参考：[examples/trading/api/indexer/locked-handler.ts](https://github.com/MystenLabs/sui/blob/main/examples/trading/api/indexer/locked-handler.ts)
+
 ```rust
 import { SuiEvent } from '@mysten/sui/client';
 import { Prisma } from '@prisma/client';
@@ -514,11 +513,9 @@ type LockDestroyed = {
 };
 
 /**
- * Handles all events emitted by the `lock` module.
- * Data is modelled in a way that allows writing to the db in any order (DESC or ASC) without
- * resulting in data incosistencies.
- * We're constructing the updates to support multiple events involving a single record
- * as part of the same batch of events (but using a single write/record to the DB).
+ * 处理 `lock` 模块发出的所有事件。
+ * 数据建模的方式允许以任意顺序（DESC or ASC）写入数据库，而不会导致数据不一致。
+ * 我们正在构建更新，以支持涉及单个记录的多个事件作为同一批事件的一部分（但使用单个写入/记录到数据库）。
  * */
 export const handleLockObjects = async (events: SuiEvent[], type: string) => {
   const updates: Record<string, Prisma.LockedCreateInput> = {};
@@ -534,22 +531,21 @@ export const handleLockObjects = async (events: SuiEvent[], type: string) => {
       };
     }
 
-    // Handle deletion
+    // 处理deletion事件
     if (isDeletionEvent) {
       updates[data.lock_id].deleted = true;
       continue;
     }
 
-    // Handle creation event
+    // 处理creation事件
     updates[data.lock_id].keyId = data.key_id;
     updates[data.lock_id].creator = data.creator;
     updates[data.lock_id].itemId = data.item_id;
   }
 
-  //  As part of the demo and to avoid having external dependencies, we use SQLite as our database.
-  //   Prisma + SQLite does not support bulk insertion & conflict handling, so we have to insert these 1 by 1
-  //   (resulting in multiple round-trips to the database).
-  //  Always use a single `bulkInsert` query with proper `onConflict` handling in production databases (e.g Postgres)
+  // 作为演示的一部分，为了避免外部依赖，我们使用 SQLite 作为数据库 
+  // Prisma + SQLite 不支持批量插入和冲突处理，因此我们必须逐个插入（导致多次往返数据库） 
+  // 在生产数据库（例如 Postgres）中，始终使用单个 `bulkInsert` 查询并进行适当的 `onConflict` 处理 
   const promises = Object.values(updates).map((update) =>
     prisma.locked.upsert({
       where: {
